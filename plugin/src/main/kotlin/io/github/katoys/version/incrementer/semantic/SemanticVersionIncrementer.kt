@@ -8,33 +8,33 @@ class SemanticVersionIncrementer(
 ) {
 
     fun upMajor(isKeepSuffix: Boolean = false) = if (isKeepSuffix) {
-        increment { it.upMajor() }
+        change { it.upMajor() }
     } else {
-        increment { it.upMajor().removeSuffix() }
+        change { it.upMajor().removeSuffix() }
     }
 
     fun upMinor(isKeepSuffix: Boolean = false) = if (isKeepSuffix) {
-        increment { it.upMinor() }
+        change { it.upMinor() }
     } else {
-        increment { it.upMinor().removeSuffix() }
+        change { it.upMinor().removeSuffix() }
     }
 
 
     fun upPatch(isKeepSuffix: Boolean = false) = if (isKeepSuffix) {
-        increment { it.upPatch() }
+        change { it.upPatch() }
     } else {
-        increment { it.upPatch().removeSuffix() }
+        change { it.upPatch().removeSuffix() }
     }
 
-    fun appendSuffix(suffix: String) = increment {
+    fun appendSuffix(suffix: String) = change {
         it.appendSuffix(suffix)
     }
 
-    fun removeSuffix() = increment {
+    fun removeSuffix() = change {
         it.removeSuffix()
     }
 
-    private fun increment(createNewVersion: (SemanticVersion) -> SemanticVersion): SemanticVersion {
+    private fun change(createNewVersion: (SemanticVersion) -> SemanticVersion): SemanticVersion {
         val currentVersion = versionRepository.find() as SemanticVersion
         val newVersion = createNewVersion(currentVersion)
         versionRepository.save(newVersion)
