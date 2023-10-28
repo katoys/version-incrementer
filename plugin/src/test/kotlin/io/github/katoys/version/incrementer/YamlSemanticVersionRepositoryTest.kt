@@ -1,5 +1,7 @@
 package io.github.katoys.version.incrementer
 
+import io.github.katoys.version.incrementer.semantic.SemanticVersion
+import io.github.katoys.version.incrementer.semantic.YamlSemanticVersionRepository
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
@@ -17,33 +19,23 @@ class YamlSemanticVersionRepositoryTest {
         @ParameterizedTest
         @CsvSource(
             value = [
-                "src/test/resources/version-0.0.0.yml, 0, 0, 0,",
-                "src/test/resources/version-0.0.1.yml, 0, 0, 1,",
-                "src/test/resources/version-0.1.0.yml, 0, 1, 0,",
-                "src/test/resources/version-1.0.0.yml, 1, 0, 0,",
-                "src/test/resources/version-9.9.9-SNAPSHOT.yml, 9, 9, 9, SNAPSHOT",
+                "src/test/resources/semantic/version-0.0.0.yml, 0.0.0,",
+                "src/test/resources/semantic/version-0.0.1.yml, 0.0.1,",
+                "src/test/resources/semantic/version-0.1.0.yml, 0.1.0,",
+                "src/test/resources/semantic/version-1.0.0.yml, 1.0.0,",
+                "src/test/resources/semantic/version-9.9.9-SNAPSHOT.yml, 9.9.9-SNAPSHOT",
             ]
         )
         fun `can read version yaml`(
             yamlPath: String,
-            expectedMajor: Int,
-            expectedMinor: Int,
-            expectedPatch: Int,
-            expectedSuffix: String?
+            expected: String
         ) {
             // given
             val repository = YamlSemanticVersionRepository(yamlPath)
             // when
             val version = repository.find()
             // then
-            if (version is SemanticVersion) {
-                assertEquals(expectedMajor, version.element.major)
-                assertEquals(expectedMinor, version.element.minor)
-                assertEquals(expectedPatch, version.element.patch)
-                assertEquals(expectedSuffix, version.element.suffix)
-            } else {
-                fail("version is not SemanticVersion")
-            }
+            assertEquals(expected, version.value)
         }
 
     }
@@ -51,7 +43,7 @@ class YamlSemanticVersionRepositoryTest {
     @Nested
     inner class Save {
 
-        private val yamlPath = "src/test/resources/testing-write-version.yml"
+        private val yamlPath = "src/test/resources/semantic/testing-write-version.yml"
 
         @BeforeEach
         fun beforeEach() {
