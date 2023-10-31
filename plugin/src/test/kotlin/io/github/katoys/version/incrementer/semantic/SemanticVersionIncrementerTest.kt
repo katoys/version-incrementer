@@ -12,15 +12,17 @@ class SemanticVersionIncrementerTest {
     @ParameterizedTest
     @CsvSource(
         value = [
-            "1.2.3-rc,true,2.0.0-rc",
-            "1.2.3-rc,false,2.0.0",
-            "1.2.3,true,2.0.0",
-            "1.2.3,false,2.0.0",
+            "1.2.3-RC,RC,2.0.0-RC",
+            "1.2.3-RC,,2.0.0",
+            "1.2.3-RC,'',2.0.0",
+            "1.2.3,RC,2.0.0-RC",
+            "1.2.3,,2.0.0",
+            "1.2.3,'',2.0.0",
         ]
     )
     fun `upMajor() is correct`(
         current: String,
-        isKeepSuffix: Boolean,
+        suffix: String?,
         expected: String
     ) {
         // given
@@ -30,12 +32,11 @@ class SemanticVersionIncrementerTest {
             every { find() } returns currentVersion
             every { save(newVersion) } returns Unit
         }
-        val sut = SemanticVersionIncrementerTasks(
-            yamlPath = "dummy-version.yml",
+        val sut = SemanticVersionIncrementer(
             versionRepository = versionRepository
         )
         // when
-        val actual = sut.upMajor(isKeepSuffix)
+        val actual = sut.upMajor(suffix)
         // then
         assertEquals(newVersion, actual)
         verify(exactly = 1) { versionRepository.find() }
@@ -45,48 +46,17 @@ class SemanticVersionIncrementerTest {
     @ParameterizedTest
     @CsvSource(
         value = [
-            "1.2.3-rc,true,1.3.0-rc",
-            "1.2.3-rc,false,1.3.0",
-            "1.2.3,true,1.3.0",
-            "1.2.3,false,1.3.0",
-        ]
-    )
-    fun `upMinor() is correct`(
-        current: String,
-        isKeepSuffix: Boolean,
-        expected: String
-    ) {
-        // given
-        val currentVersion = SemanticVersion.from(current)
-        val newVersion = SemanticVersion.from(expected)
-        val versionRepository = mockk<YamlSemanticVersionRepository> {
-            every { find() } returns currentVersion
-            every { save(newVersion) } returns Unit
-        }
-        val sut = SemanticVersionIncrementerTasks(
-            yamlPath = "dummy-version.yml",
-            versionRepository = versionRepository
-        )
-        // when
-        val actual = sut.upMinor(isKeepSuffix)
-        // then
-        assertEquals(newVersion, actual)
-        verify(exactly = 1) { versionRepository.find() }
-        verify(exactly = 1) { versionRepository.save(newVersion) }
-    }
-
-    @ParameterizedTest
-    @CsvSource(
-        value = [
-            "1.2.3-rc,true,1.2.4-rc",
-            "1.2.3-rc,false,1.2.4",
-            "1.2.3,true,1.2.4",
-            "1.2.3,false,1.2.4",
+            "1.2.3-RC,RC,1.2.4-RC",
+            "1.2.3-RC,,1.2.4",
+            "1.2.3-RC,'',1.2.4",
+            "1.2.3,RC,1.2.4-RC",
+            "1.2.3,,1.2.4",
+            "1.2.3,'',1.2.4",
         ]
     )
     fun `upPatch() is correct`(
         current: String,
-        isKeepSuffix: Boolean,
+        suffix: String?,
         expected: String
     ) {
         // given
@@ -96,12 +66,11 @@ class SemanticVersionIncrementerTest {
             every { find() } returns currentVersion
             every { save(newVersion) } returns Unit
         }
-        val sut = SemanticVersionIncrementerTasks(
-            yamlPath = "dummy-version.yml",
+        val sut = SemanticVersionIncrementer(
             versionRepository = versionRepository
         )
         // when
-        val actual = sut.upPatch(isKeepSuffix)
+        val actual = sut.upPatch(suffix)
         // then
         assertEquals(newVersion, actual)
         verify(exactly = 1) { versionRepository.find() }
@@ -111,12 +80,17 @@ class SemanticVersionIncrementerTest {
     @ParameterizedTest
     @CsvSource(
         value = [
-            "1.2.3-rc,SNAPSHOT,1.2.3-SNAPSHOT",
+            "1.2.3-RC,RC,1.3.0-RC",
+            "1.2.3-RC,,1.3.0",
+            "1.2.3-RC,'',1.3.0",
+            "1.2.3,RC,1.3.0-RC",
+            "1.2.3,,1.3.0",
+            "1.2.3,'',1.3.0",
         ]
     )
-    fun `appendSuffix() is correct`(
+    fun `upMinor() is correct`(
         current: String,
-        suffix: String,
+        suffix: String?,
         expected: String
     ) {
         // given
@@ -126,12 +100,11 @@ class SemanticVersionIncrementerTest {
             every { find() } returns currentVersion
             every { save(newVersion) } returns Unit
         }
-        val sut = SemanticVersionIncrementerTasks(
-            yamlPath = "dummy-version.yml",
+        val sut = SemanticVersionIncrementer(
             versionRepository = versionRepository
         )
         // when
-        val actual = sut.appendSuffix(suffix)
+        val actual = sut.upMinor(suffix)
         // then
         assertEquals(newVersion, actual)
         verify(exactly = 1) { versionRepository.find() }
@@ -141,11 +114,17 @@ class SemanticVersionIncrementerTest {
     @ParameterizedTest
     @CsvSource(
         value = [
-            "1.2.3-rc,1.2.3",
+            "1.2.3-RC,SNAPSHOT,1.2.3-SNAPSHOT",
+            "1.2.3-RC,RC,1.2.3-RC",
+            "1.2.3-RC,,1.2.3",
+            "1.2.3-RC,'',1.2.3",
+            "1.2.3,,1.2.3",
+            "1.2.3,'',1.2.3",
         ]
     )
-    fun `removeSuffix() is correct`(
+    fun `suffix() is correct`(
         current: String,
+        suffix: String?,
         expected: String
     ) {
         // given
@@ -155,12 +134,11 @@ class SemanticVersionIncrementerTest {
             every { find() } returns currentVersion
             every { save(newVersion) } returns Unit
         }
-        val sut = SemanticVersionIncrementerTasks(
-            yamlPath = "dummy-version.yml",
+        val sut = SemanticVersionIncrementer(
             versionRepository = versionRepository
         )
         // when
-        val actual = sut.removeSuffix()
+        val actual = sut.suffix(suffix)
         // then
         assertEquals(newVersion, actual)
         verify(exactly = 1) { versionRepository.find() }

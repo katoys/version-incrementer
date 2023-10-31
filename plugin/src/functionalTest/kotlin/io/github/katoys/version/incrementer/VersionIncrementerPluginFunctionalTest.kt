@@ -29,26 +29,12 @@ class VersionIncrementerPluginFunctionalTest {
     }
 
     @Test
-    fun `can run greeting task`() {
-        // when: Run the build
-        val runner = GradleRunner.create()
-        runner.forwardOutput()
-        runner.withPluginClasspath()
-        runner.withArguments("greeting")
-        runner.withProjectDir(projectDir)
-        val result = runner.build()
-
-        // then: Verify the result
-        assertTrue(result.output.contains("Hello from plugin 'io.github.katoys.version-incrementer'"))
-    }
-
-    @Test
     fun `can run task`() {
         // when: Run the build
         val runner = GradleRunner.create()
         runner.forwardOutput()
         runner.withPluginClasspath()
-        runner.withArguments("upMajor", "-PkeepSuffix=true")
+        runner.withArguments("semantic", "-Ptarget=current", "-PyamlPath=src/test/resources/semantic/testing-write-version.yml")
         runner.withProjectDir(projectDir)
         val result = runner.build()
 
