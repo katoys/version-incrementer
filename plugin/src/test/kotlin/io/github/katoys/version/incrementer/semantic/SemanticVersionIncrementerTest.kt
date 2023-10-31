@@ -30,7 +30,7 @@ class SemanticVersionIncrementerTest {
             every { find() } returns currentVersion
             every { save(newVersion) } returns Unit
         }
-        val sut = SemanticVersionIncrementer(
+        val sut = SemanticVersionIncrementerTasks(
             yamlPath = "dummy-version.yml",
             versionRepository = versionRepository
         )
@@ -63,7 +63,7 @@ class SemanticVersionIncrementerTest {
             every { find() } returns currentVersion
             every { save(newVersion) } returns Unit
         }
-        val sut = SemanticVersionIncrementer(
+        val sut = SemanticVersionIncrementerTasks(
             yamlPath = "dummy-version.yml",
             versionRepository = versionRepository
         )
@@ -96,7 +96,7 @@ class SemanticVersionIncrementerTest {
             every { find() } returns currentVersion
             every { save(newVersion) } returns Unit
         }
-        val sut = SemanticVersionIncrementer(
+        val sut = SemanticVersionIncrementerTasks(
             yamlPath = "dummy-version.yml",
             versionRepository = versionRepository
         )
@@ -126,7 +126,7 @@ class SemanticVersionIncrementerTest {
             every { find() } returns currentVersion
             every { save(newVersion) } returns Unit
         }
-        val sut = SemanticVersionIncrementer(
+        val sut = SemanticVersionIncrementerTasks(
             yamlPath = "dummy-version.yml",
             versionRepository = versionRepository
         )
@@ -155,7 +155,7 @@ class SemanticVersionIncrementerTest {
             every { find() } returns currentVersion
             every { save(newVersion) } returns Unit
         }
-        val sut = SemanticVersionIncrementer(
+        val sut = SemanticVersionIncrementerTasks(
             yamlPath = "dummy-version.yml",
             versionRepository = versionRepository
         )

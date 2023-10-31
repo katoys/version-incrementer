@@ -13,6 +13,6 @@ class VersionIncrementerPluginTest {
         project.plugins.apply("io.github.katoys.version-incrementer")
 
         // when & then
-        assertNotNull(project.tasks.findByName("greeting"))
+        assertNotNull(project.tasks.findByName("upMajor"))
     }
 }

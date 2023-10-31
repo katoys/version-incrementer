@@ -1,11 +1,37 @@
 package io.github.katoys.version.incrementer.semantic
 
 import io.github.katoys.version.incrementer.VersionRepository
+import org.gradle.api.DefaultTask
+import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.TaskAction
 
-class SemanticVersionIncrementer(
+class SemanticVersionIncrementerTasks(
     private val yamlPath: String,
     private val versionRepository: VersionRepository = YamlSemanticVersionRepository(yamlPath)
 ) {
+    companion object {
+        const val DEFAULT_YAML_PATH = "version.yml"
+    }
+
+    class Config(
+        val yamlPath: String = DEFAULT_YAML_PATH,
+        val keepSuffix: Boolean = false
+    )
+
+    abstract class UpMajor : DefaultTask() {
+
+        @get:Input
+        var config = Config()
+
+        @TaskAction
+        fun task() {
+            if (config.keepSuffix) {
+                println("upMajor: keep suffix, ${config.yamlPath}")
+            } else {
+                println("upMajor: remove suffix, ${config.yamlPath}")
+            }
+        }
+    }
 
     fun upMajor(isKeepSuffix: Boolean = false) = if (isKeepSuffix) {
         change { it.upMajor() }

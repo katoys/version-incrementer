@@ -4,6 +4,7 @@ import java.io.File
 import kotlin.test.assertTrue
 import kotlin.test.Test
 import org.gradle.testkit.runner.GradleRunner
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.io.TempDir
 
 @Suppress("FunctionName")
@@ -15,9 +16,8 @@ class VersionIncrementerPluginFunctionalTest {
     private val buildFile by lazy { projectDir.resolve("build.gradle") }
     private val settingsFile by lazy { projectDir.resolve("settings.gradle") }
 
-    @Test
-    fun `can run task`() {
-        // given: Set up the test build
+    @BeforeEach
+    fun beforeEach() {
         settingsFile.writeText("")
         buildFile.writeText(
             """
@@ -26,7 +26,10 @@ class VersionIncrementerPluginFunctionalTest {
             }
         """.trimIndent()
         )
+    }
 
+    @Test
+    fun `can run greeting task`() {
         // when: Run the build
         val runner = GradleRunner.create()
         runner.forwardOutput()
@@ -37,5 +40,19 @@ class VersionIncrementerPluginFunctionalTest {
 
         // then: Verify the result
         assertTrue(result.output.contains("Hello from plugin 'io.github.katoys.version-incrementer'"))
+    }
+
+    @Test
+    fun `can run task`() {
+        // when: Run the build
+        val runner = GradleRunner.create()
+        runner.forwardOutput()
+        runner.withPluginClasspath()
+        runner.withArguments("upMajor", "-PkeepSuffix=true")
+        runner.withProjectDir(projectDir)
+        val result = runner.build()
+
+        // then: Verify the result
+        assertTrue(result.output.contains("upMajor"))
     }
 }
