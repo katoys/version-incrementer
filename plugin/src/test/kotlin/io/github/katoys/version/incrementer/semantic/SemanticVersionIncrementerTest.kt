@@ -4,10 +4,56 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 
 class SemanticVersionIncrementerTest {
+
+    @ParameterizedTest
+    @CsvSource(
+        value = [
+            "1.2.3-RC",
+            "1.2.3",
+            "999.999.999",
+            "999.999.999-SNAPSHOT",
+        ]
+    )
+    fun `init() is correct`(
+        value: String
+    ) {
+        // given
+        val expected = SemanticVersion.from(value)
+        val versionRepository = mockk<YamlSemanticVersionRepository> {
+            every { save(expected) } returns Unit
+        }
+        val sut = SemanticVersionIncrementer(
+            versionRepository = versionRepository
+        )
+        // when
+        val actual = sut.init(value)
+        // then
+        assertEquals(expected, actual)
+        verify(exactly = 1) { versionRepository.save(expected) }
+    }
+
+    @Test
+    fun `current() is correct`() {
+        // given
+        val expected = SemanticVersion.from("1.2.3-RC")
+        val versionRepository = mockk<YamlSemanticVersionRepository> {
+            every { find() } returns expected
+        }
+        val sut = SemanticVersionIncrementer(
+            versionRepository = versionRepository
+        )
+        // when
+        val actual = sut.current()
+        // then
+        assertEquals(expected, actual)
+        verify(exactly = 1) { versionRepository.find() }
+        verify(exactly = 0) { versionRepository.save(any()) }
+    }
 
     @ParameterizedTest
     @CsvSource(
