@@ -1,8 +1,8 @@
 package io.github.katoys.version.incrementer
 
 import org.gradle.testfixtures.ProjectBuilder
-import kotlin.test.Test
-import kotlin.test.assertNotNull
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Test
 
 class VersionIncrementerPluginTest {
 
