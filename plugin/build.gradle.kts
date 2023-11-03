@@ -9,10 +9,11 @@ repositories {
 }
 
 dependencies {
+    implementation("org.yaml:snakeyaml:2.2")
     testImplementation("org.junit.jupiter:junit-jupiter:5.10.0")
     testImplementation("io.mockk:mockk:1.13.8")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.9.2")
 }
 
 gradlePlugin {
