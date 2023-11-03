@@ -2,11 +2,11 @@ package io.github.katoys.version.incrementer
 
 import org.gradle.testkit.runner.BuildResult
 import java.io.File
-import kotlin.test.assertTrue
-import kotlin.test.Test
 import org.gradle.testkit.runner.GradleRunner
 import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
 
 @Suppress("FunctionName")
