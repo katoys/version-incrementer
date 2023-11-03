@@ -46,40 +46,40 @@ class VersionIncrementerPluginFunctionalTest {
     }
 
     @Test
-    fun `can run task`() {
+    fun `can run versioning`() {
         // when
-        val result = runTask("current")
+        val result = runSemanticVersioning("current")
         // then
         assertTrue(result.output.contains("version: 0.0.0"))
     }
 
     @Test
-    fun `can run tasks repeatable`() {
+    fun `can run versioning repeatable`() {
         // when & then
-        runTask("init", value = "1.0.0").also {
+        runSemanticVersioning("init", value = "1.0.0").also {
             assertTrue(it.output.contains("version: 1.0.0"))
         }
-        runTask("up-major").also {
+        runSemanticVersioning("up-major").also {
             assertTrue(it.output.contains("version: 2.0.0"))
         }
-        runTask("up-minor").also {
+        runSemanticVersioning("up-minor").also {
             assertTrue(it.output.contains("version: 2.1.0"))
         }
-        runTask("up-patch").also {
+        runSemanticVersioning("up-patch").also {
             assertTrue(it.output.contains("version: 2.1.1"))
         }
-        runTask("append-suffix", suffix = "RC").also {
+        runSemanticVersioning("append-suffix", suffix = "RC").also {
             assertTrue(it.output.contains("version: 2.1.1-RC"))
         }
-        runTask("remove-suffix").also {
+        runSemanticVersioning("remove-suffix").also {
             assertTrue(it.output.contains("version: 2.1.1"))
         }
-        runTask("current").also {
+        runSemanticVersioning("current").also {
             assertTrue(it.output.contains("version: 2.1.1"))
         }
     }
 
-    private fun runTask(
+    private fun runSemanticVersioning(
         action: String,
         suffix: String? = null,
         value: String? = null
@@ -88,7 +88,8 @@ class VersionIncrementerPluginFunctionalTest {
         it.withPluginClasspath()
         it.withProjectDir(projectDir)
         it.withArguments(
-            "semantic",
+            "versioning",
+            "-Ptype=semantic",
             "-Paction=$action",
             "-Psuffix=${suffix ?: ""}",
             "-Pvalue=${value ?: ""}",

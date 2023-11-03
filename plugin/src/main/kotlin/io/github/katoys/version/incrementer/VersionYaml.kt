@@ -5,6 +5,11 @@ import org.yaml.snakeyaml.Yaml
 import java.io.File
 
 interface VersionYaml {
+
+    companion object {
+        const val DEFAULT_PATH = "version.yml"
+    }
+
     val yamlPath: String
 
     fun readValue(type: Version.Type): String {
