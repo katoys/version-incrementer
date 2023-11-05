@@ -66,17 +66,17 @@
 
 ### Execute function
 
-```kotlin
-import io.github.katoys.version.incrementer.semantic.SemanticVersionIncrementer
-```
-
-```kotlin
-val versioning = SemanticVersionIncrementer()
-versioning.init("0.0.1") // create version.yml
-versioning.current() // get current version
-versioning.upMajor() // increment major version
-versioning.upMinor() // increment minor version
-versioning.upPatch() // increment patch version
-versioning.appendSuffix("-SNAPSHOT") // append suffix of version
-versioning.removeSuffix() // remove suffix of version
-```
+- Following is sample code in Kotlin. For Groovy, please change accordingly.
+  ```
+  import io.github.katoys.version.incrementer.semantic.SemanticVersionIncrementer
+  ```
+  ```
+  val versioning = SemanticVersionIncrementer()
+  versioning.init("0.0.1") // create version.yml
+  versioning.current() // get current version
+  versioning.upMajor() // increment major version
+  versioning.upMinor() // increment minor version
+  versioning.upPatch() // increment patch version
+  versioning.appendSuffix("-SNAPSHOT") // append suffix of version
+  versioning.removeSuffix() // remove suffix of version
+  ```
