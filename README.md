@@ -6,6 +6,11 @@
 - It is intended to be used in a CI/CD pipeline to increment the version number in a YAML.
 - The plugin supports semantic versioning. ( `MAJOR.MINOR.PATCH` )
 - THe plugin supports version modifiers such as SNAPSHOT, GA.
+- YAML sample)
+  ```yaml
+  type: Semantic
+  value: 1.2.3-RELEASE
+  ```
 
 ## Usage plugin
 
@@ -14,7 +19,7 @@
 - Add the following to your `build.gradle.kts` (Kotlin DSL). For Groovy DSL, please change accordingly.
     ```
     plugins {
-        id("io.github.katoys.version-incrementer") version "1.0.0"
+        id("io.github.katoys.version-incrementer") version "0.0.1"
     }
     
     apply(plugin = "io.github.katoys.version-incrementer")
@@ -22,11 +27,11 @@
 
 ### Execute gradle task
 
-- Create `version.yml` in the root of your project.
+- Create YAML in the root of your project. (default `version.yml`)
     ```console
     gradle versioning -Paction=init -Pvalue=0.0.1
     ```
-- Get current version. (from `version.yml`)
+- Get current version. (from YAML)
     ```console
     gradle versioning -Paction=current
     ```
@@ -39,13 +44,13 @@
   | up-major      | increment major version |
   | up-minor      | increment minor version |
   | up-patch      | increment patch version |
-- Append supplement of version.
+- Append modifier of version.
     ```console
-    gradle versioning -Paction=append-supplement -Psuffix=supplement
+    gradle versioning -Paction=append-modifier -Psuffix=modifier
     ```
-- Remove supplement of version.
+- Remove modifier of version.
     ```console
-    gradle versioning -Paction=remove-supplement
+    gradle versioning -Paction=remove-modifier
     ```
 - YAML path can be specified.
     ```console
@@ -59,7 +64,7 @@
 - Add the following to your `build.gradle.kts` (Kotlin DSL). For Groovy DSL, please change accordingly.
     ```build.gradle.kts
     dependencies {
-        implementation("io.github.katoys:version-incrementer:1.0.0")
+        implementation("io.github.katoys:version-incrementer:0.0.1")
     } 
     ```
 
