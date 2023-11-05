@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "io.github.katoys"
-version = "0.0.1"
+version = "0.9.0"
 
 repositories {
     mavenCentral()
@@ -17,18 +17,9 @@ dependencies {
     testImplementation("io.mockk:mockk:1.13.8")
 }
 
-gradlePlugin {
-    website = "https://github.com/katoys/version-incrementer"
-    vcsUrl = "https://github.com/katoys/version-incrementer"
-
-    val versioning by plugins.creating {
-        id = "io.github.katoys.version-incrementer"
-        displayName = "Version Incrementer"
-        description = "simple gradle plugin that increments the version number"
-        tags = listOf("versioning", "semantic-versioning", "kotlin")
-        implementationClass = "io.github.katoys.version.incrementer.VersionIncrementerPlugin"
-    }
-}
+/**
+ * functional test
+ */
 
 val functionalTestSourceSet = sourceSets.create("functionalTest") {
 }
@@ -50,6 +41,23 @@ tasks.named<Task>("check") {
 
 tasks.named<Test>("test") {
     useJUnitPlatform()
+}
+
+/**
+ * plugin settings
+ */
+
+gradlePlugin {
+    website = "https://github.com/katoys/version-incrementer"
+    vcsUrl = "https://github.com/katoys/version-incrementer"
+
+    val versioning by plugins.creating {
+        id = "io.github.katoys.version-incrementer"
+        displayName = "Version Incrementer"
+        description = "simple gradle plugin that increments the version number"
+        tags = listOf("versioning", "semantic-versioning", "kotlin")
+        implementationClass = "io.github.katoys.version.incrementer.VersionIncrementerPlugin"
+    }
 }
 
 buildscript {

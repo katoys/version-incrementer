@@ -1,5 +1,7 @@
 # Version Incrementer
 
+[![build plugin](https://github.com/katoys/version-incrementer/actions/workflows/build-plugin.yml/badge.svg?branch=main)](https://github.com/katoys/version-incrementer/actions/workflows/build-plugin.yml)
+
 ## Description
 
 - This is a simple gradle plugin that increments the version number in a YAML.
