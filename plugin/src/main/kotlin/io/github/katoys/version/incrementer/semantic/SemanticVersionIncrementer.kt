@@ -14,25 +14,25 @@ class SemanticVersionIncrementer(
     fun current() = versionRepository.find() as? SemanticVersion
         ?: throw IllegalArgumentException("versionRepository is null")
 
-    fun upMajor(suffix: String? = null) = change(suffix) { it.upMajor() }
+    fun upMajor(modifier: String? = null) = change(modifier) { it.upMajor() }
 
-    fun upMinor(suffix: String? = null) = change(suffix) { it.upMinor() }
+    fun upMinor(modifier: String? = null) = change(modifier) { it.upMinor() }
 
-    fun upPatch(suffix: String? = null) = change(suffix) { it.upPatch() }
+    fun upPatch(modifier: String? = null) = change(modifier) { it.upPatch() }
 
-    fun suffix(suffix: String? = null) = change(suffix) { it }
+    fun modifier(modifier: String? = null) = change(modifier) { it }
 
     private fun change(
-        suffix: String?,
+        modifier: String?,
         incrementVersion: (SemanticVersion) -> SemanticVersion
     ): SemanticVersion {
         val currentVersion = versionRepository.find() as SemanticVersion
         val newVersion = incrementVersion(currentVersion)
             .let {
-                if (suffix?.isNotEmpty() == true) {
-                    it.appendSuffix(suffix)
+                if (modifier?.isNotEmpty() == true) {
+                    it.appendModifier(modifier)
                 } else {
-                    it.removeSuffix()
+                    it.removeModifier()
                 }
             }
         versionRepository.save(newVersion)

@@ -68,10 +68,10 @@ class VersionIncrementerPluginFunctionalTest {
         runSemanticVersioning("up-patch").also {
             assertTrue(it.output.contains("version: 2.1.1"))
         }
-        runSemanticVersioning("append-suffix", suffix = "RC").also {
+        runSemanticVersioning("append-modifier", modifier = "RC").also {
             assertTrue(it.output.contains("version: 2.1.1-RC"))
         }
-        runSemanticVersioning("remove-suffix").also {
+        runSemanticVersioning("remove-modifier").also {
             assertTrue(it.output.contains("version: 2.1.1"))
         }
         runSemanticVersioning("current").also {
@@ -81,7 +81,7 @@ class VersionIncrementerPluginFunctionalTest {
 
     private fun runSemanticVersioning(
         action: String,
-        suffix: String? = null,
+        modifier: String? = null,
         value: String? = null
     ): BuildResult = GradleRunner.create().also {
         it.forwardOutput()
@@ -91,7 +91,7 @@ class VersionIncrementerPluginFunctionalTest {
             "versioning",
             "-Ptype=semantic",
             "-Paction=$action",
-            "-Psuffix=${suffix ?: ""}",
+            "-Pmodifier=${modifier ?: ""}",
             "-Pvalue=${value ?: ""}",
             "-PyamlPath=${projectDir.resolve(VERSION_YAML)}"
         )
