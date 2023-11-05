@@ -1,8 +1,11 @@
 plugins {
     `java-gradle-plugin`
-    `maven-publish`
     id("org.jetbrains.kotlin.jvm") version "1.9.10"
+    id("com.gradle.plugin-publish") version "1.2.1"
 }
+
+group = "io.github.katoys"
+version = "0.0.1"
 
 repositories {
     mavenCentral()
@@ -15,8 +18,14 @@ dependencies {
 }
 
 gradlePlugin {
-    val greeting by plugins.creating {
+    website = "https://github.com/katoys/version-incrementer"
+    vcsUrl = "https://github.com/katoys/version-incrementer"
+
+    val versioning by plugins.creating {
         id = "io.github.katoys.version-incrementer"
+        displayName = "Version Incrementer"
+        description = "simple gradle plugin that increments the version number"
+        tags = listOf("versioning", "semantic-versioning", "kotlin")
         implementationClass = "io.github.katoys.version.incrementer.VersionIncrementerPlugin"
     }
 }
@@ -43,13 +52,15 @@ tasks.named<Test>("test") {
     useJUnitPlatform()
 }
 
-publishing {
-    publications {
-        create<MavenPublication>("version-incrementer") {
-            groupId = "io.github.katoys"
-            artifactId = "version-incrementer"
-            version = "0.0.1"
-            from(components["java"])
+buildscript {
+    repositories {
+        maven {
+            url = uri("https://plugins.gradle.org/m2/")
         }
     }
+    dependencies {
+        classpath("com.gradle.publish:plugin-publish-plugin:1.2.1")
+    }
 }
+
+apply(plugin = "com.gradle.plugin-publish")
