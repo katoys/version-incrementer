@@ -6,6 +6,7 @@ plugins {
 
 group = "io.github.katoys"
 version = "0.9.0"
+val artifactName = "version-incrementer"
 
 repositories {
     mavenCentral()
@@ -47,19 +48,6 @@ tasks.named<Test>("test") {
  * plugin settings
  */
 
-gradlePlugin {
-    website = "https://github.com/katoys/version-incrementer"
-    vcsUrl = "https://github.com/katoys/version-incrementer"
-
-    val versioning by plugins.creating {
-        id = "io.github.katoys.version-incrementer"
-        displayName = "Version Incrementer"
-        description = "simple gradle plugin that increments the version number"
-        tags = listOf("versioning", "semantic-versioning", "kotlin")
-        implementationClass = "io.github.katoys.version.incrementer.VersionIncrementerPlugin"
-    }
-}
-
 buildscript {
     repositories {
         maven {
@@ -72,3 +60,16 @@ buildscript {
 }
 
 apply(plugin = "com.gradle.plugin-publish")
+
+gradlePlugin {
+    website = "https://github.com/katoys/version-incrementer"
+    vcsUrl = "https://github.com/katoys/version-incrementer"
+
+    val versioning by plugins.creating {
+        id = "${project.group}.${artifactName}"
+        displayName = "Version Incrementer"
+        description = "simple gradle plugin that increments the version number"
+        tags = listOf("versioning", "semantic-versioning", "kotlin")
+        implementationClass = "io.github.katoys.version.incrementer.VersionIncrementerPlugin"
+    }
+}
