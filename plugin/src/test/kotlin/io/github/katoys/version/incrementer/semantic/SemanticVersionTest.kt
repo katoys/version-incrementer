@@ -1,6 +1,5 @@
-package io.github.katoys.version.incrementer
+package io.github.katoys.version.incrementer.semantic
 
-import io.github.katoys.version.incrementer.semantic.SemanticVersion
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.params.ParameterizedTest
@@ -20,7 +19,7 @@ class SemanticVersionTest {
                 "1.2.3-SNAPSHOT,1,2,3,SNAPSHOT"
             ]
         )
-        fun `from string`(value: String, major: Int, minor: Int, patch: Int, suffix: String?) {
+        fun `from string`(value: String, major: Int, minor: Int, patch: Int, modifier: String?) {
             // when
             val actual = SemanticVersion.from(value)
             // then
@@ -28,7 +27,7 @@ class SemanticVersionTest {
             assertEquals(major, actual.element.major)
             assertEquals(minor, actual.element.minor)
             assertEquals(patch, actual.element.patch)
-            assertEquals(suffix, actual.element.suffix)
+            assertEquals(modifier, actual.element.modifier)
         }
 
         @ParameterizedTest
@@ -40,20 +39,20 @@ class SemanticVersionTest {
                 "1.2.3-SNAPSHOT,1,2,3,SNAPSHOT"
             ]
         )
-        fun `from element`(value: String, major: Int, minor: Int, patch: Int, suffix: String?) {
+        fun `from element`(value: String, major: Int, minor: Int, patch: Int, modifier: String?) {
             // when
             val actual = SemanticVersion.from(
                 major = major,
                 minor = minor,
                 patch = patch,
-                suffix = suffix
+                modifier = modifier
             )
             // then
             assertEquals(value, actual.value)
             assertEquals(major, actual.element.major)
             assertEquals(minor, actual.element.minor)
             assertEquals(patch, actual.element.patch)
-            assertEquals(suffix, actual.element.suffix)
+            assertEquals(modifier, actual.element.modifier)
         }
     }
 
@@ -110,7 +109,7 @@ class SemanticVersionTest {
     }
 
     @Nested
-    inner class Suffix {
+    inner class Modifier {
 
         @ParameterizedTest
         @CsvSource(
@@ -122,9 +121,9 @@ class SemanticVersionTest {
                 "1.2.3-SNAPSHOT,'',1.2.3",
             ]
         )
-        fun `append suffix`(value: String, suffix: String?, expected: String) {
+        fun `append modifier`(value: String, modifier: String?, expected: String) {
             // when
-            val actual = SemanticVersion.from(value).appendSuffix(suffix)
+            val actual = SemanticVersion.from(value).appendModifier(modifier)
             // then
             assertEquals(expected, actual.value)
         }
@@ -137,9 +136,9 @@ class SemanticVersionTest {
                 "1.2.3,1.2.3",
             ]
         )
-        fun `remove suffix`(value: String, expected: String) {
+        fun `remove modifier`(value: String, expected: String) {
             // when
-            val actual = SemanticVersion.from(value).removeSuffix()
+            val actual = SemanticVersion.from(value).removeModifier()
             // then
             assertEquals(expected, actual.value)
         }

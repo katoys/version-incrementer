@@ -2,11 +2,11 @@ package io.github.katoys.version.incrementer
 
 import org.gradle.testkit.runner.BuildResult
 import java.io.File
-import kotlin.test.assertTrue
-import kotlin.test.Test
 import org.gradle.testkit.runner.GradleRunner
 import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
 
 @Suppress("FunctionName")
@@ -46,51 +46,52 @@ class VersionIncrementerPluginFunctionalTest {
     }
 
     @Test
-    fun `can run task`() {
+    fun `can run versioning`() {
         // when
-        val result = runTask("current")
+        val result = runSemanticVersioning("current")
         // then
         assertTrue(result.output.contains("version: 0.0.0"))
     }
 
     @Test
-    fun `can run tasks repeatable`() {
+    fun `can run versioning repeatable`() {
         // when & then
-        runTask("init", value = "1.0.0").also {
+        runSemanticVersioning("init", value = "1.0.0").also {
             assertTrue(it.output.contains("version: 1.0.0"))
         }
-        runTask("up-major").also {
+        runSemanticVersioning("up-major").also {
             assertTrue(it.output.contains("version: 2.0.0"))
         }
-        runTask("up-minor").also {
+        runSemanticVersioning("up-minor").also {
             assertTrue(it.output.contains("version: 2.1.0"))
         }
-        runTask("up-patch").also {
+        runSemanticVersioning("up-patch").also {
             assertTrue(it.output.contains("version: 2.1.1"))
         }
-        runTask("append-suffix", suffix = "RC").also {
+        runSemanticVersioning("append-modifier", modifier = "RC").also {
             assertTrue(it.output.contains("version: 2.1.1-RC"))
         }
-        runTask("remove-suffix").also {
+        runSemanticVersioning("remove-modifier").also {
             assertTrue(it.output.contains("version: 2.1.1"))
         }
-        runTask("current").also {
+        runSemanticVersioning("current").also {
             assertTrue(it.output.contains("version: 2.1.1"))
         }
     }
 
-    private fun runTask(
+    private fun runSemanticVersioning(
         action: String,
-        suffix: String? = null,
+        modifier: String? = null,
         value: String? = null
     ): BuildResult = GradleRunner.create().also {
         it.forwardOutput()
         it.withPluginClasspath()
         it.withProjectDir(projectDir)
         it.withArguments(
-            "semantic",
+            "versioning",
+            "-Ptype=semantic",
             "-Paction=$action",
-            "-Psuffix=${suffix ?: ""}",
+            "-Pmodifier=${modifier ?: ""}",
             "-Pvalue=${value ?: ""}",
             "-PyamlPath=${projectDir.resolve(VERSION_YAML)}"
         )

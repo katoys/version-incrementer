@@ -7,14 +7,14 @@ data class SemanticVersion(
 ) : Version {
     override val type = Version.Type.Semantic
     override val value = element.run {
-        "$major.$minor.$patch${suffix?.trim()?.let { "-$it" } ?: ""}"
+        "$major.$minor.$patch${modifier?.trim()?.let { "-$it" } ?: ""}"
     }
 
     fun upMajor() = copy(element = element.copy(major = element.major + 1, minor = 0, patch = 0))
     fun upMinor() = copy(element = element.copy(minor = element.minor + 1, patch = 0))
     fun upPatch() = copy(element = element.copy(patch = element.patch + 1))
-    fun appendSuffix(suffix: String?) = copy(element = element.copy(suffix = suffix?.ifEmpty { null }))
-    fun removeSuffix() = copy(element = element.copy(suffix = null))
+    fun appendModifier(modifier: String?) = copy(element = element.copy(modifier = modifier?.ifEmpty { null }))
+    fun removeModifier() = copy(element = element.copy(modifier = null))
 
     companion object {
 
@@ -28,7 +28,7 @@ data class SemanticVersion(
                     major = it[0].toInt(),
                     minor = it[1].toInt(),
                     patch = it[2].toInt(),
-                    suffix = if (it.size > 3) it[3] else null
+                    modifier = if (it.size > 3) it[3] else null
                 )
             }
 
@@ -36,13 +36,13 @@ data class SemanticVersion(
             major: Int = 0,
             minor: Int = 0,
             patch: Int = 0,
-            suffix: String? = null
+            modifier: String? = null
         ) = SemanticVersion(
             Element(
                 major = major,
                 minor = minor,
                 patch = patch,
-                suffix = suffix?.ifEmpty { null }
+                modifier = modifier?.ifEmpty { null }
             )
         )
     }
@@ -51,13 +51,13 @@ data class SemanticVersion(
         val major: Int = 0,
         val minor: Int = 0,
         val patch: Int = 0,
-        val suffix: String? = null
+        val modifier: String? = null
     ) {
         init {
             if (major < 0) throw IllegalArgumentException("major must be greater than or equal to 0")
             if (minor < 0) throw IllegalArgumentException("minor must be greater than or equal to 0")
             if (patch < 0) throw IllegalArgumentException("patch must be greater than or equal to 0")
-            if (suffix?.isEmpty() == true) throw IllegalArgumentException("suffix must be not empty")
+            if (modifier?.isEmpty() == true) throw IllegalArgumentException("modifier must be not empty")
         }
     }
 }

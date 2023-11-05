@@ -1,6 +1,6 @@
 plugins {
     `java-gradle-plugin`
-
+    `maven-publish`
     id("org.jetbrains.kotlin.jvm") version "1.9.10"
 }
 
@@ -41,4 +41,15 @@ tasks.named<Task>("check") {
 
 tasks.named<Test>("test") {
     useJUnitPlatform()
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("version-incrementer") {
+            groupId = "io.github.katoys"
+            artifactId = "version-incrementer"
+            version = "0.0.1"
+            from(components["java"])
+        }
+    }
 }

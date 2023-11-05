@@ -68,7 +68,7 @@ class SemanticVersionIncrementerTest {
     )
     fun `upMajor() is correct`(
         current: String,
-        suffix: String?,
+        modifier: String?,
         expected: String
     ) {
         // given
@@ -82,7 +82,7 @@ class SemanticVersionIncrementerTest {
             versionRepository = versionRepository
         )
         // when
-        val actual = sut.upMajor(suffix)
+        val actual = sut.upMajor(modifier)
         // then
         assertEquals(newVersion, actual)
         verify(exactly = 1) { versionRepository.find() }
@@ -102,7 +102,7 @@ class SemanticVersionIncrementerTest {
     )
     fun `upPatch() is correct`(
         current: String,
-        suffix: String?,
+        modifier: String?,
         expected: String
     ) {
         // given
@@ -116,7 +116,7 @@ class SemanticVersionIncrementerTest {
             versionRepository = versionRepository
         )
         // when
-        val actual = sut.upPatch(suffix)
+        val actual = sut.upPatch(modifier)
         // then
         assertEquals(newVersion, actual)
         verify(exactly = 1) { versionRepository.find() }
@@ -136,7 +136,7 @@ class SemanticVersionIncrementerTest {
     )
     fun `upMinor() is correct`(
         current: String,
-        suffix: String?,
+        modifier: String?,
         expected: String
     ) {
         // given
@@ -150,7 +150,7 @@ class SemanticVersionIncrementerTest {
             versionRepository = versionRepository
         )
         // when
-        val actual = sut.upMinor(suffix)
+        val actual = sut.upMinor(modifier)
         // then
         assertEquals(newVersion, actual)
         verify(exactly = 1) { versionRepository.find() }
@@ -168,9 +168,9 @@ class SemanticVersionIncrementerTest {
             "1.2.3,'',1.2.3",
         ]
     )
-    fun `suffix() is correct`(
+    fun `modifier() is correct`(
         current: String,
-        suffix: String?,
+        modifier: String?,
         expected: String
     ) {
         // given
@@ -184,7 +184,7 @@ class SemanticVersionIncrementerTest {
             versionRepository = versionRepository
         )
         // when
-        val actual = sut.suffix(suffix)
+        val actual = sut.modifier(modifier)
         // then
         assertEquals(newVersion, actual)
         verify(exactly = 1) { versionRepository.find() }
