@@ -6,7 +6,7 @@ on:
       - '**'
     paths:
       - '.github/workflows/build-plugin.yml'
-      - 'plugins/**'
+      - 'plugin/**'
 
 jobs:
   build:
