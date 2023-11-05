@@ -5,6 +5,17 @@ interface Version {
     val value: String
 
     enum class Type {
-        Semantic
+        Semantic;
+
+        companion object {
+            private val DEFAULT = Semantic
+
+            fun from(value: String?): Type = value?.let {
+                when (value.lowercase()) {
+                    "semantic" -> Semantic
+                    else -> throw IllegalArgumentException("'$value' is unknown type")
+                }
+            } ?: DEFAULT
+        }
     }
 }
