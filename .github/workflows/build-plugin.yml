@@ -22,6 +22,6 @@ jobs:
           distribution: 'corretto'
           cache: 'gradle'
 
-      - name: Run test
+      - name: Run build
         run: |
-          ./gradlew plugin:test
+          ./gradlew plugin:build
