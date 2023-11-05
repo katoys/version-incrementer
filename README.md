@@ -8,7 +8,7 @@
 - It is intended to be used in a CI/CD pipeline to increment the version number in a YAML.
 - The plugin supports semantic versioning. ( `MAJOR.MINOR.PATCH` )
 - THe plugin supports version modifiers such as SNAPSHOT, GA.
-- YAML sample)
+- YAML sample )
   ```yaml
   type: Semantic
   value: 1.2.3-RELEASE
@@ -33,10 +33,6 @@
     ```console
     gradle versioning -Paction=init -Pvalue=0.0.1
     ```
-- Get current version. (from YAML)
-    ```console
-    gradle versioning -Paction=current
-    ```
 - Increment semantic version.
     ```console
     gradle versioning -Paction=$action
@@ -54,8 +50,13 @@
     ```console
     gradle versioning -Paction=remove-modifier
     ```
+- Print current version. (from YAML)
+    ```console
+    gradle printCurrentVersion
+    ```
 - YAML path can be specified.
     ```console
+    gradle printCurrentVersion -PyamlPath=your/path/to/version.yml
     gradle versioning -Paction=$action -PyamlPath=your/path/to/version.yml
     ```
 
@@ -74,15 +75,15 @@
 
 - Following is sample code in Kotlin. For Groovy, please change accordingly.
   ```
-  import io.github.katoys.version.incrementer.semantic.SemanticVersionIncrementer
+  import io.github.katoys.version.incrementer.semantic.SemanticVersioning
   ```
   ```
-  val versioning = SemanticVersionIncrementer()
+  val versioning = SemanticVersioning()
   versioning.init("0.0.1") // create version.yml
-  versioning.current() // get current version
   versioning.upMajor() // increment major version
   versioning.upMinor() // increment minor version
   versioning.upPatch() // increment patch version
   versioning.appendModifier("-SNAPSHOT") // append modifier of version
   versioning.removeModifier() // remove modifier of version
+  versioning.current() // get current version
   ```

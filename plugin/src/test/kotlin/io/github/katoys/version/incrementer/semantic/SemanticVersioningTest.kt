@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 
-class SemanticVersionIncrementerTest {
+class SemanticVersioningTest {
 
     @ParameterizedTest
     @CsvSource(
@@ -27,7 +27,7 @@ class SemanticVersionIncrementerTest {
         val versionRepository = mockk<YamlSemanticVersionRepository> {
             every { save(expected) } returns Unit
         }
-        val sut = SemanticVersionIncrementer(
+        val sut = SemanticVersioning(
             versionRepository = versionRepository
         )
         // when
@@ -44,7 +44,7 @@ class SemanticVersionIncrementerTest {
         val versionRepository = mockk<YamlSemanticVersionRepository> {
             every { find() } returns expected
         }
-        val sut = SemanticVersionIncrementer(
+        val sut = SemanticVersioning(
             versionRepository = versionRepository
         )
         // when
@@ -78,7 +78,7 @@ class SemanticVersionIncrementerTest {
             every { find() } returns currentVersion
             every { save(newVersion) } returns Unit
         }
-        val sut = SemanticVersionIncrementer(
+        val sut = SemanticVersioning(
             versionRepository = versionRepository
         )
         // when
@@ -112,7 +112,7 @@ class SemanticVersionIncrementerTest {
             every { find() } returns currentVersion
             every { save(newVersion) } returns Unit
         }
-        val sut = SemanticVersionIncrementer(
+        val sut = SemanticVersioning(
             versionRepository = versionRepository
         )
         // when
@@ -146,7 +146,7 @@ class SemanticVersionIncrementerTest {
             every { find() } returns currentVersion
             every { save(newVersion) } returns Unit
         }
-        val sut = SemanticVersionIncrementer(
+        val sut = SemanticVersioning(
             versionRepository = versionRepository
         )
         // when
@@ -180,7 +180,7 @@ class SemanticVersionIncrementerTest {
             every { find() } returns currentVersion
             every { save(newVersion) } returns Unit
         }
-        val sut = SemanticVersionIncrementer(
+        val sut = SemanticVersioning(
             versionRepository = versionRepository
         )
         // when

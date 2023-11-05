@@ -1,6 +1,6 @@
 package io.github.katoys.version.incrementer
 
-import io.github.katoys.version.incrementer.semantic.SemanticVersionIncrementer
+import io.github.katoys.version.incrementer.semantic.SemanticVersioning
 import org.gradle.api.Project
 import org.gradle.api.Plugin
 
@@ -10,56 +10,44 @@ class VersionIncrementerPlugin : Plugin<Project> {
 
         project.tasks.register("versioning") { task ->
             task.doLast {
-                // get properties
-                val type = (project.properties["type"] as String?)?.let { Type.from(it) } ?: Type.DEFAULT
-                val action = project.properties["action"] as String?
-                val modifier = project.properties["modifier"] as String?
-                val value = project.properties["value"] as String?
-                val yamlPath = project.properties["yamlPath"] as String?
+                val property = Property(project)
 
-                // versioning
-                val version = when (type) {
-                    Type.Semantic -> {
-                        semanticVersioning(
-                            yamlPath = yamlPath ?: VersionYaml.DEFAULT_PATH,
-                            action = action,
-                            modifier = modifier,
-                            value = value
-                        )
-                    }
+                val version = when (property.type) {
+                    Version.Type.Semantic -> semanticVersioning(
+                        yamlPath = property.yamlPath,
+                        action = property.action,
+                        modifier = property.modifier,
+                        value = property.value
+                    )
                 }
 
-                // print version json
-                println("version: ${version.value}")
+                printVersion(version)
+            }
+        }
+
+        project.tasks.register("printCurrentVersion") { task ->
+            task.doLast {
+                val property = Property(project)
+
+                val version = when (property.type) {
+                    Version.Type.Semantic -> SemanticVersioning(property.yamlPath).current()
+                }
+
+                printVersion(version)
             }
         }
     }
 
-    enum class Type {
-        Semantic;
-
-        companion object {
-
-            val DEFAULT = Semantic
-
-            fun from(value: String): Type {
-                return when (value.lowercase()) {
-                    "semantic" -> Semantic
-                    else -> throw IllegalArgumentException("'$value' is unknown type")
-                }
-            }
-        }
-    }
+    private fun printVersion(version: Version) = println("version: ${version.value}")
 
     private fun semanticVersioning(
         yamlPath: String,
         action: String?,
         modifier: String?,
         value: String?
-    ): Version = SemanticVersionIncrementer(yamlPath).let {
+    ): Version = SemanticVersioning(yamlPath).let {
         when (action?.lowercase()) {
             "init" -> it.init(value = value ?: throw IllegalArgumentException("value is null"))
-            "current" -> it.current()
             "up-major" -> it.upMajor(modifier)
             "up-minor" -> it.upMinor(modifier)
             "up-patch" -> it.upPatch(modifier)
@@ -67,5 +55,20 @@ class VersionIncrementerPlugin : Plugin<Project> {
             "remove-modifier" -> it.modifier()
             else -> throw IllegalArgumentException("'$action' is unknown action")
         }
+    }
+
+    class Property(
+        private val project: Project
+    ) {
+        val type: Version.Type
+            get() = Version.Type.from(project.properties["type"] as String?)
+        val yamlPath: String
+            get() = project.properties["yamlPath"] as String? ?: VersionYaml.DEFAULT_PATH
+        val action: String?
+            get() = project.properties["action"] as String?
+        val modifier: String?
+            get() = project.properties["modifier"] as String?
+        val value: String?
+            get() = project.properties["value"] as String?
     }
 }

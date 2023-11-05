@@ -3,7 +3,7 @@ package io.github.katoys.version.incrementer.semantic
 import io.github.katoys.version.incrementer.VersionRepository
 import io.github.katoys.version.incrementer.VersionYaml
 
-class SemanticVersionIncrementer(
+class SemanticVersioning(
     private val yamlPath: String = VersionYaml.DEFAULT_PATH,
     private val versionRepository: VersionRepository = YamlSemanticVersionRepository(yamlPath),
 ) {

@@ -46,41 +46,53 @@ class VersionIncrementerPluginFunctionalTest {
     }
 
     @Test
-    fun `can run versioning`() {
+    fun `can run printCurrentVersion`() {
         // when
-        val result = runSemanticVersioning("current")
+        val result = runTask("printCurrentVersion")
         // then
         assertTrue(result.output.contains("version: 0.0.0"))
     }
 
     @Test
+    fun `can run versioning`() {
+        // when
+        val result = runVersioning("init", value = "999.999.999-SNAPSHOT")
+        // then
+        assertTrue(result.output.contains("version: 999.999.999-SNAPSHOT"))
+    }
+
+    @Test
     fun `can run versioning repeatable`() {
         // when & then
-        runSemanticVersioning("init", value = "1.0.0").also {
+        runVersioning("init", value = "1.0.0").also {
             assertTrue(it.output.contains("version: 1.0.0"))
         }
-        runSemanticVersioning("up-major").also {
+        runVersioning("up-major").also {
             assertTrue(it.output.contains("version: 2.0.0"))
         }
-        runSemanticVersioning("up-minor").also {
+        runVersioning("up-minor").also {
             assertTrue(it.output.contains("version: 2.1.0"))
         }
-        runSemanticVersioning("up-patch").also {
+        runVersioning("up-patch").also {
             assertTrue(it.output.contains("version: 2.1.1"))
         }
-        runSemanticVersioning("append-modifier", modifier = "RC").also {
+        runVersioning("append-modifier", modifier = "RC").also {
             assertTrue(it.output.contains("version: 2.1.1-RC"))
         }
-        runSemanticVersioning("remove-modifier").also {
-            assertTrue(it.output.contains("version: 2.1.1"))
-        }
-        runSemanticVersioning("current").also {
+        runVersioning("remove-modifier").also {
             assertTrue(it.output.contains("version: 2.1.1"))
         }
     }
 
-    private fun runSemanticVersioning(
+    private fun runVersioning(
         action: String,
+        modifier: String? = null,
+        value: String? = null
+    ) = runTask("versioning", action, modifier, value)
+
+    private fun runTask(
+        taskName: String,
+        action: String? = null,
         modifier: String? = null,
         value: String? = null
     ): BuildResult = GradleRunner.create().also {
@@ -88,7 +100,7 @@ class VersionIncrementerPluginFunctionalTest {
         it.withPluginClasspath()
         it.withProjectDir(projectDir)
         it.withArguments(
-            "versioning",
+            taskName,
             "-Ptype=semantic",
             "-Paction=$action",
             "-Pmodifier=${modifier ?: ""}",
