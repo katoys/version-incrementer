@@ -1,6 +1,5 @@
 package io.github.katoys.version.incrementer.semantic
 
-import io.github.katoys.version.incrementer.semantic.SemanticVersion
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.params.ParameterizedTest
