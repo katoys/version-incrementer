@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "io.github.katoys"
-version = "0.9.0"
+version = "1.0.0"
 val artifactName = "version-incrementer"
 
 repositories {
