@@ -25,6 +25,8 @@
 
 ## Usage
 
+### Gradle task execution
+
 - Create YAML in the root of your project. (default `version.yml`)
     ```console
     gradle versioning -Paction=init -Pvalue=$value
@@ -60,3 +62,18 @@
     gradle printCurrentVersion -PyamlPath=your/path/to/version.yml
     gradle versioning -Paction=$action -PyamlPath=your/path/to/version.yml
     ```
+
+### Call function in `build.gradle.kts`
+
+```kotlin
+import io.github.katoys.version.incrementer.semantic.SemanticVersioning
+
+val versioning = SemanticVersioning()
+versioning.init("0.0.1") // init YAML
+versioning.upMajor() // increment major version
+versioning.upMinor() // increment minor version
+versioning.upPatch() // increment patch version
+versioning.modifier("SNAPSHOT") // append 'SNAPSHOT' as modifier
+versioning.modifier() // remove modifier
+versioning.current() // get current version
+```
