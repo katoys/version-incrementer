@@ -21,10 +21,8 @@
 - Add the following to your `build.gradle.kts` (Kotlin DSL). For Groovy DSL, please change accordingly.
     ```
     plugins {
-        id("io.github.katoys.version-incrementer") version "0.0.1"
+        id("io.github.katoys.version-incrementer") version "1.0.0"
     }
-    
-    apply(plugin = "io.github.katoys.version-incrementer")
     ```
 
 ### Execute gradle task
@@ -44,7 +42,7 @@
   | up-patch      | increment patch version |
 - Append modifier of version.
     ```console
-    gradle versioning -Paction=append-modifier -Psuffix=modifier
+    gradle versioning -Paction=append-modifier -Pmodifier=modifier
     ```
 - Remove modifier of version.
     ```console
@@ -67,8 +65,8 @@
 - Add the following to your `build.gradle.kts` (Kotlin DSL). For Groovy DSL, please change accordingly.
     ```build.gradle.kts
     dependencies {
-        implementation("io.github.katoys:version-incrementer:0.0.1")
-    } 
+        implementation("io.github.katoys:version-incrementer:1.0.0")
+    }
     ```
 
 ### Execute function
