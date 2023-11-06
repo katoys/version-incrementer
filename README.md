@@ -14,9 +14,7 @@
   value: 1.2.3-RELEASE
   ```
 
-## Usage plugin
-
-### Installation
+## Installation
 
 - Add the following to your `build.gradle.kts` (Kotlin DSL). For Groovy DSL, please change accordingly.
     ```
@@ -25,26 +23,31 @@
     }
     ```
 
-### Execute gradle task
+## Usage
 
 - Create YAML in the root of your project. (default `version.yml`)
     ```console
-    gradle versioning -Paction=init -Pvalue=0.0.1
+    gradle versioning -Paction=init -Pvalue=$value
     ```
 - Increment semantic version.
     ```console
     gradle versioning -Paction=$action
     ```
-  | $action       | description             |
-  |---------------|-------------------------|
-  | up-major      | increment major version |
-  | up-minor      | increment minor version |
-  | up-patch      | increment patch version |
-- Append modifier of version.
+  | $action       | description             | e.g. current version 1.2.3 |
+  |---------------|-------------------------|----------------------------|
+  | up-major      | increment major version | result is `2.0.0`          |
+  | up-minor      | increment minor version | result is `1.3.0`          |
+  | up-patch      | increment patch version | result is `1.2.4`          |
+
+  - Increment version with modifier.
+      ```console
+      gradle versioning -Paction=$action -Pmodifier=modifier
+      ```
+- Append version modifier only. (version does not increment)
     ```console
     gradle versioning -Paction=append-modifier -Pmodifier=modifier
     ```
-- Remove modifier of version.
+- Remove version modifier only. (version does not increment)
     ```console
     gradle versioning -Paction=remove-modifier
     ```
@@ -57,31 +60,3 @@
     gradle printCurrentVersion -PyamlPath=your/path/to/version.yml
     gradle versioning -Paction=$action -PyamlPath=your/path/to/version.yml
     ```
-
-## Usage function
-
-### Installation
-
-- Add the following to your `build.gradle.kts` (Kotlin DSL). For Groovy DSL, please change accordingly.
-    ```build.gradle.kts
-    dependencies {
-        implementation("io.github.katoys:version-incrementer:1.0.0")
-    }
-    ```
-
-### Execute function
-
-- Following is sample code in Kotlin. For Groovy, please change accordingly.
-  ```
-  import io.github.katoys.version.incrementer.semantic.SemanticVersioning
-  ```
-  ```
-  val versioning = SemanticVersioning()
-  versioning.init("0.0.1") // create version.yml
-  versioning.upMajor() // increment major version
-  versioning.upMinor() // increment minor version
-  versioning.upPatch() // increment patch version
-  versioning.appendModifier("-SNAPSHOT") // append modifier of version
-  versioning.removeModifier() // remove modifier of version
-  versioning.current() // get current version
-  ```
