@@ -1,0 +1,91 @@
+name: usage sample
+
+on:
+  push:
+    branches:
+      - '**'
+    paths:
+      - 'sample/**'
+
+env:
+  VERSION_YAML_PATH: sample/version.yml
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Setup JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'corretto'
+          cache: 'gradle'
+
+      - name: versioning 1 - current version
+        run: |
+          ./gradlew sample:printCurrentVersion \
+            -PyamlPath=$VERSION_YAML_PATH
+          cat $VERSION_YAML_PATH
+
+      - name: versioning 2 - up-patch
+        run: |
+          ./gradlew sample:versioning \
+            -PyamlPath=$VERSION_YAML_PATH \
+            -Paction=up-patch \
+          cat $VERSION_YAML_PATH
+
+      - name: versioning 3 - up-patch with modifier
+        run: |
+          ./gradlew sample:versioning \
+            -PyamlPath=$VERSION_YAML_PATH \
+            -Paction=up-patch \
+            -Pmodifier=alpha1 \
+          cat $VERSION_YAML_PATH
+
+      - name: versioning 4 - up-minor
+        run: |
+          ./gradlew sample:versioning \
+            -PyamlPath=$VERSION_YAML_PATH \
+            -Paction=up-minor \
+          cat $VERSION_YAML_PATH
+
+      - name: versioning 5 - up-minor with modifier
+        run: |
+          ./gradlew sample:versioning \
+            -PyamlPath=$VERSION_YAML_PATH \
+            -Paction=up-minor \
+            -Pmodifier=beta1 \
+          cat $VERSION_YAML_PATH
+
+      - name: versioning 6 - up-major
+        run: |
+          ./gradlew sample:versioning \
+            -PyamlPath=$VERSION_YAML_PATH \
+            -Paction=up-major \
+          cat $VERSION_YAML_PATH
+
+      - name: versioning 7 - up-major with modifier
+        run: |
+          ./gradlew sample:versioning \
+            -PyamlPath=$VERSION_YAML_PATH \
+            -Paction=up-major \
+            -Pmodifier=SNAPSHOT \
+          cat $VERSION_YAML_PATH
+
+      - name: versioning 8 - append modifier only
+        run: |
+          ./gradlew sample:versioning \
+            -PyamlPath=$VERSION_YAML_PATH \
+            -Paction=append-modifier \
+            -Pmodifier=RC1 \
+          cat $VERSION_YAML_PATH
+
+      - name: versioning 9 - remove modifier only
+        run: |
+          ./gradlew sample:versioning \
+            -PyamlPath=$VERSION_YAML_PATH \
+            -Paction=remove-modifier \
+          cat $VERSION_YAML_PATH
