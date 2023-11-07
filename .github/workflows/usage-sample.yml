@@ -5,6 +5,7 @@ on:
     branches:
       - '**'
     paths:
+      - '.github/workflows/usage-sample.yml'
       - 'sample/**'
 
 env:
