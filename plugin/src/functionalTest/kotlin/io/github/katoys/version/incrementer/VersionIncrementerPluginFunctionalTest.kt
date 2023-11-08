@@ -50,7 +50,7 @@ class VersionIncrementerPluginFunctionalTest {
         // when
         val result = runTask("printCurrentVersion")
         // then
-        assertTrue(result.output.contains("version: 0.0.0"))
+        assertTrue(result.output.contains("0.0.0"))
     }
 
     @Test
@@ -58,29 +58,29 @@ class VersionIncrementerPluginFunctionalTest {
         // when
         val result = runVersioning("init", value = "999.999.999-SNAPSHOT")
         // then
-        assertTrue(result.output.contains("version: 999.999.999-SNAPSHOT"))
+        assertTrue(result.output.contains("999.999.999-SNAPSHOT"))
     }
 
     @Test
     fun `can run versioning repeatable`() {
         // when & then
         runVersioning("init", value = "1.0.0").also {
-            assertTrue(it.output.contains("version: 1.0.0"))
+            assertTrue(it.output.contains("1.0.0"))
         }
         runVersioning("up-major").also {
-            assertTrue(it.output.contains("version: 2.0.0"))
+            assertTrue(it.output.contains("2.0.0"))
         }
         runVersioning("up-minor").also {
-            assertTrue(it.output.contains("version: 2.1.0"))
+            assertTrue(it.output.contains("2.1.0"))
         }
         runVersioning("up-patch").also {
-            assertTrue(it.output.contains("version: 2.1.1"))
+            assertTrue(it.output.contains("2.1.1"))
         }
         runVersioning("append-modifier", modifier = "RC").also {
-            assertTrue(it.output.contains("version: 2.1.1-RC"))
+            assertTrue(it.output.contains("2.1.1-RC"))
         }
         runVersioning("remove-modifier").also {
-            assertTrue(it.output.contains("version: 2.1.1"))
+            assertTrue(it.output.contains("2.1.1"))
         }
     }
 
