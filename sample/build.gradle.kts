@@ -5,10 +5,6 @@ plugins {
 }
 
 group = "io.github.katoys"
-version = if (project.properties.containsKey("yamlPath")) {
-    SemanticVersioning(project.properties["yamlPath"].toString()).current().value
-} else {
-    "0.0.1-SNAPSHOT"
-}
+version = SemanticVersioning(project.rootDir.resolve("sample/version.yml").path).current().value
 
 println("version is $version")
