@@ -5,6 +5,6 @@ plugins {
 }
 
 group = "io.github.katoys"
-version = SemanticVersioning(project.rootDir.resolve("version.yml").path).current().value
+version = SemanticVersioning(project.rootDir.resolve("sample/version.yml").path).current().value
 
 println("version is $version")
