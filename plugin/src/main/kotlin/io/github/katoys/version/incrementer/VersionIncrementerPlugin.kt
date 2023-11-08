@@ -38,7 +38,7 @@ class VersionIncrementerPlugin : Plugin<Project> {
         }
     }
 
-    private fun printVersion(version: Version) = println("version: ${version.value}")
+    private fun printVersion(version: Version) = println(version.value)
 
     private fun semanticVersioning(
         yamlPath: String,
