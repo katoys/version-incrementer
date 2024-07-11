@@ -14,8 +14,8 @@ repositories {
 
 dependencies {
     implementation("org.yaml:snakeyaml:2.2")
-    testImplementation("org.junit.jupiter:junit-jupiter:5.10.0")
-    testImplementation("io.mockk:mockk:1.13.8")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.10.3")
+    testImplementation("io.mockk:mockk:1.13.10")
 }
 
 /**
