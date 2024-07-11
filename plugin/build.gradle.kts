@@ -62,14 +62,14 @@ buildscript {
 apply(plugin = "com.gradle.plugin-publish")
 
 gradlePlugin {
-    website = "https://github.com/katoys/version-incrementer"
-    vcsUrl = "https://github.com/katoys/version-incrementer"
+    website.set("https://github.com/katoys/version-incrementer")
+    vcsUrl.set("https://github.com/katoys/version-incrementer")
 
     val versioning by plugins.creating {
         id = "${project.group}.${artifactName}"
         displayName = "Version Incrementer"
         description = "simple gradle plugin that increments the version number"
-        tags = listOf("versioning", "semantic-versioning", "kotlin")
+        tags.set(listOf("versioning", "semantic-versioning", "kotlin"))
         implementationClass = "io.github.katoys.version.incrementer.VersionIncrementerPlugin"
     }
 }
