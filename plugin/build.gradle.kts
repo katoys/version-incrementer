@@ -1,6 +1,6 @@
 plugins {
     `java-gradle-plugin`
-    id("org.jetbrains.kotlin.jvm") version "1.9.10"
+    id("org.jetbrains.kotlin.jvm") version "2.0.0"
     id("com.gradle.plugin-publish") version "1.2.1"
 }
 
@@ -14,8 +14,8 @@ repositories {
 
 dependencies {
     implementation("org.yaml:snakeyaml:2.2")
-    testImplementation("org.junit.jupiter:junit-jupiter:5.10.0")
-    testImplementation("io.mockk:mockk:1.13.8")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.10.3")
+    testImplementation("io.mockk:mockk:1.13.10")
 }
 
 /**
@@ -62,14 +62,14 @@ buildscript {
 apply(plugin = "com.gradle.plugin-publish")
 
 gradlePlugin {
-    website = "https://github.com/katoys/version-incrementer"
-    vcsUrl = "https://github.com/katoys/version-incrementer"
+    website.set("https://github.com/katoys/version-incrementer")
+    vcsUrl.set("https://github.com/katoys/version-incrementer")
 
     val versioning by plugins.creating {
         id = "${project.group}.${artifactName}"
         displayName = "Version Incrementer"
         description = "simple gradle plugin that increments the version number"
-        tags = listOf("versioning", "semantic-versioning", "kotlin")
+        tags.set(listOf("versioning", "semantic-versioning", "kotlin"))
         implementationClass = "io.github.katoys.version.incrementer.VersionIncrementerPlugin"
     }
 }

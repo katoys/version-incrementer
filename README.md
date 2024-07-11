@@ -43,11 +43,11 @@
 
   - Increment version with modifier.
       ```console
-      gradle versioning -Paction=$action -Pmodifier=modifier
+      gradle versioning -Paction=$action -Pmodifier=$modifier
       ```
 - Append version modifier only. (version does not increment)
     ```console
-    gradle versioning -Paction=append-modifier -Pmodifier=modifier
+    gradle versioning -Paction=append-modifier -Pmodifier=$modifier
     ```
 - Remove version modifier only. (version does not increment)
     ```console
