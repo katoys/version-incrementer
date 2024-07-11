@@ -18,7 +18,7 @@ data class SemanticVersion(
 
     companion object {
 
-        private val regex = Regex("""\d+\.\d+\.\d+(-.+)?""")
+        private val regex = Regex("""^(?<major>\d+)\.(?<minor>\d+)\.(?<patch>\d+)(?<modifier>-.+)?$""")
 
         fun from(value: String) = value
             .also { if (!regex.matches(it)) throw IllegalArgumentException("invalid version format: $it") }
