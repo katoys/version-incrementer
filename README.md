@@ -41,13 +41,29 @@
   | up-minor      | increment minor version | result is `1.3.0`          |
   | up-patch      | increment patch version | result is `1.2.4`          |
 
-  - Increment version with modifier.
+  - Increment version and append modifier.
       ```console
       gradle versioning -Paction=$action -Pmodifier=$modifier
       ```
+  - Increment version, append modifier and sequential number.
+      ```console
+      gradle versioning -Paction=$action -Pmodifier=$modifier -PaddModifiersSeq=$naturalNumber
+      ```
+      - `addModifiersSeq` is optional natural number. If present, it adds to modifier.
+        ```console
+        $ gradle printCurrentVersion -q
+        1.0.0
+        $ gradle versioning -Paction=up-minor -Pmodifier=alpha -PaddModifiersSeq=1
+        1.0.0-alpha.1
+        ```
 - Append version modifier only. (version does not increment)
     ```console
     gradle versioning -Paction=append-modifier -Pmodifier=$modifier
+    ```
+    - `addModifiersSeq` is optional. Default is `false`.
+- Increment modifier sequential number. (version does not increment)
+    ```console
+    gradle versioning -Paction=up-modifier-seq
     ```
 - Remove version modifier only. (version does not increment)
     ```console
@@ -69,11 +85,13 @@
 import io.github.katoys.version.incrementer.semantic.SemanticVersioning
 
 val versioning = SemanticVersioning()
-versioning.init("0.0.1") // init YAML
-versioning.upMajor() // increment major version
-versioning.upMinor() // increment minor version
-versioning.upPatch() // increment patch version
-versioning.modifier("SNAPSHOT") // append 'SNAPSHOT' as modifier
-versioning.modifier() // remove modifier
+versioning.init("0.0.1") // init YAML -> 0.0.1
+versioning.upMajor() // increment major version -> 1.0.0
+versioning.upMinor() // increment minor version -> 1.1.0
+versioning.upPatch() // increment patch version -> 1.1.1
+versioning.modifier("alpha") // append 'alpha' as modifier -> 1.1.1-alpha
+versioning.addModifierSeq(1) // append sequential number to alpha -> 1.1.1-alpha.1
+versioning.upModifierSeq() // increment modifiers sequential number -> 1.1.1-alpha.2
+versioning.modifier() // remove modifier -> 1.1.1
 versioning.current() // get current version
 ```
