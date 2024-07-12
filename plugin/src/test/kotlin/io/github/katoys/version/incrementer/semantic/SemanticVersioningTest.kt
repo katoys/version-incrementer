@@ -190,4 +190,33 @@ class SemanticVersioningTest {
         verify(exactly = 1) { versionRepository.find() }
         verify(exactly = 1) { versionRepository.save(newVersion) }
     }
+
+    @ParameterizedTest
+    @CsvSource(value = [
+        "1.2.3-alpha,1.2.3-alpha.1",
+        "1.2.3-alpha.1,1.2.3-alpha.2",
+        "1.2.3-alpha.2,1.2.3-alpha.3",
+        "1.2.3,1.2.3",
+    ])
+    fun `nextModifierSeq() is correct`(
+        current: String,
+        expected: String
+    ) {
+        // given
+        val currentVersion = SemanticVersion.from(current).also(::println)
+        val newVersion = SemanticVersion.from(expected).also(::println)
+        val versionRepository = mockk<YamlSemanticVersionRepository> {
+            every { find() } returns currentVersion
+            every { save(newVersion) } returns Unit
+        }
+        val sut = SemanticVersioning(
+            versionRepository = versionRepository
+        )
+        // when
+        val actual = sut.nextModifierSeq()
+        // then
+        assertEquals(newVersion, actual)
+        verify(exactly = 1) { versionRepository.find() }
+        verify(exactly = 1) { versionRepository.save(newVersion) }
+    }
 }

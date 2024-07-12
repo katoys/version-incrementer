@@ -16,7 +16,12 @@ class SemanticVersionTest {
                 "0.0.0,0,0,0,",
                 "1.2.3,1,2,3,",
                 "999.999.999,999,999,999,",
-                "1.2.3-SNAPSHOT,1,2,3,SNAPSHOT"
+                "1.2.3-SNAPSHOT,1,2,3,SNAPSHOT",
+                "1.2.3-alpha.1,1,2,3,alpha.1",
+                "1.2.3-alpha.2,1,2,3,alpha.2",
+                "1.2.3-beta.3,1,2,3,beta.3",
+                "1.2.3-beta.1.4,1,2,3,beta.1.4",
+                "1.2.3-beta-1.5,1,2,3,beta-1.5",
             ]
         )
         fun `from string`(value: String, major: Int, minor: Int, patch: Int, modifier: String?) {
@@ -27,7 +32,7 @@ class SemanticVersionTest {
             assertEquals(major, actual.element.major)
             assertEquals(minor, actual.element.minor)
             assertEquals(patch, actual.element.patch)
-            assertEquals(modifier, actual.element.modifier)
+            assertEquals(modifier, actual.element.modifier?.value)
         }
 
         @ParameterizedTest
@@ -36,7 +41,12 @@ class SemanticVersionTest {
                 "0.0.0,0,0,0,",
                 "1.2.3,1,2,3,",
                 "999.999.999,999,999,999,",
-                "1.2.3-SNAPSHOT,1,2,3,SNAPSHOT"
+                "1.2.3-SNAPSHOT,1,2,3,SNAPSHOT",
+                "1.2.3-alpha.1,1,2,3,alpha.1",
+                "1.2.3-alpha.2,1,2,3,alpha.2",
+                "1.2.3-beta.3,1,2,3,beta.3",
+                "1.2.3-beta.1.4,1,2,3,beta.1.4",
+                "1.2.3-beta-1.5,1,2,3,beta-1.5",
             ]
         )
         fun `from element`(value: String, major: Int, minor: Int, patch: Int, modifier: String?) {
@@ -52,7 +62,7 @@ class SemanticVersionTest {
             assertEquals(major, actual.element.major)
             assertEquals(minor, actual.element.minor)
             assertEquals(patch, actual.element.patch)
-            assertEquals(modifier, actual.element.modifier)
+            assertEquals(modifier, actual.element.modifier?.value)
         }
     }
 
@@ -117,6 +127,8 @@ class SemanticVersionTest {
                 "1.2.3,SNAPSHOT,1.2.3-SNAPSHOT",
                 "1.2.3-SNAPSHOT,SNAPSHOT,1.2.3-SNAPSHOT",
                 "1.2.3-SNAPSHOT,RELEASE,1.2.3-RELEASE",
+                "1.2.3-SNAPSHOT,alpha.1,1.2.3-alpha.1",
+                "1.2.3-alpha.1,alpha.2,1.2.3-alpha.2",
                 "1.2.3-SNAPSHOT,,1.2.3",
                 "1.2.3-SNAPSHOT,'',1.2.3",
             ]
@@ -131,8 +143,36 @@ class SemanticVersionTest {
         @ParameterizedTest
         @CsvSource(
             value = [
+                "1.2.3-alpha,1.2.3-alpha.1",
+                "1.2.3-alpha.1,1.2.3-alpha.2",
+                "1.2.3-alpha.2,1.2.3-alpha.3",
+                "1.2.3-alpha.3,1.2.3-alpha.4",
+                "1.2.3-alpha.9,1.2.3-alpha.10",
+                "1.2.3-alpha.99,1.2.3-alpha.100",
+                "1.2.3-alpha.1.9,1.2.3-alpha.1.10",
+                "1.2.3-alpha.1.2.9,1.2.3-alpha.1.2.10",
+                "1.2.3-beta.1,1.2.3-beta.2",
+                "1.2.3-test.1,1.2.3-test.2",
+                "1.2.3-XXX.1,1.2.3-XXX.2",
+                "1.2.3-X-Y.Z.1,1.2.3-X-Y.Z.2",
+                "1.2.3,1.2.3",
+            ]
+        )
+        fun `next modifiers sequential number`(value: String, expected: String) {
+            // given
+            val sut = SemanticVersion.from(value)
+            // when
+            val actual = sut.nextModifierSeq()
+            // then
+            assertEquals(expected, actual.value)
+        }
+
+        @ParameterizedTest
+        @CsvSource(
+            value = [
                 "1.2.3-SNAPSHOT,1.2.3",
                 "1.2.3-RELEASE,1.2.3",
+                "1.2.3-alpha.1,1.2.3",
                 "1.2.3,1.2.3",
             ]
         )
