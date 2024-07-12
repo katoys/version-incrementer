@@ -22,6 +22,7 @@
         id("io.github.katoys.version-incrementer") version "1.0.0"
     }
     ```
+- Published as a gradle plugins: https://plugins.gradle.org/plugin/io.github.katoys.version-incrementer
 
 ## Usage
 
@@ -45,26 +46,18 @@
       ```console
       gradle versioning -Paction=$action -Pmodifier=$modifier
       ```
-  - Increment version, append modifier and sequential number.
-      ```console
-      gradle versioning -Paction=$action -Pmodifier=$modifier -PaddModifiersSeq=$naturalNumber
-      ```
-      - `addModifiersSeq` is optional natural number. If present, it adds to modifier.
-        ```console
-        $ gradle printCurrentVersion -q
-        1.0.0
-        $ gradle versioning -Paction=up-minor -Pmodifier=alpha -PaddModifiersSeq=1
-        1.0.0-alpha.1
-        ```
 - Append version modifier only. (version does not increment)
     ```console
     gradle versioning -Paction=append-modifier -Pmodifier=$modifier
     ```
-    - `addModifiersSeq` is optional. Default is `false`.
-- Increment modifier sequential number. (version does not increment)
+- Append or increment modifier sequential number. (version does not increment)
     ```console
-    gradle versioning -Paction=up-modifier-seq
+    gradle versioning -Paction=next-modifier-seq
     ```
+    - sequential number is SEQ part of `/^./(?<SEQ>\.\d+)$/`.
+    - sequential number has not been set, it will be set to 1.
+    - sequential number is already set, it will be incremented.
+    - if no modifier is set, nothing is done.
 - Remove version modifier only. (version does not increment)
     ```console
     gradle versioning -Paction=remove-modifier
@@ -78,6 +71,28 @@
     gradle printCurrentVersion -PyamlPath=your/path/to/version.yml
     gradle versioning -Paction=$action -PyamlPath=your/path/to/version.yml
     ```
+#### Example
+
+```console
+$ gradle versioning -Paction=init -Pvalue=0.0.1-SNAPSHOT -q
+0.0.1-SNAPSHOT
+$ gradle versioning -Paction=up-major -Pmodifier=SNAPSHOT -q
+1.0.0-SNAPSHOT
+$ gradle versioning -Paction=up-minor -Pmodifier=SNAPSHOT -q
+1.1.0-SNAPSHOT
+$ gradle versioning -Paction=up-patch -Pmodifier=SNAPSHOT -q
+1.1.1-SNAPSHOT
+$ gradle versioning -Paction=append-modifier -Pmodifier=alpha -q
+1.1.1-alpha
+$ gradle versioning -Paction=next-modifier-seq -q
+1.1.1-alpha.1
+$ gradle versioning -Paction=next-modifier-seq -q
+1.1.1-alpha.2
+$ gradle versioning -Paction=remove-modifier -q
+1.1.1
+$ gradle printCurrentVersion -q
+1.1.1
+```
 
 ### Call function in `build.gradle.kts`
 
@@ -90,8 +105,8 @@ versioning.upMajor() // increment major version -> 1.0.0
 versioning.upMinor() // increment minor version -> 1.1.0
 versioning.upPatch() // increment patch version -> 1.1.1
 versioning.modifier("alpha") // append 'alpha' as modifier -> 1.1.1-alpha
-versioning.addModifierSeq(1) // append sequential number to alpha -> 1.1.1-alpha.1
-versioning.upModifierSeq() // increment modifiers sequential number -> 1.1.1-alpha.2
+versioning.nextModifierSeq() // append modifiers sequential number to alpha -> 1.1.1-alpha.1
+versioning.nextModifierSeq() // increment modifiers sequential number -> 1.1.1-alpha.2
 versioning.modifier() // remove modifier -> 1.1.1
 versioning.current() // get current version
 ```
