@@ -14,28 +14,40 @@ class SemanticVersioning(
     fun current() = versionRepository.find() as? SemanticVersion
         ?: throw IllegalArgumentException("versionRepository is null")
 
-    fun upMajor(modifier: String? = null) = change(modifier) { it.upMajor() }
+    fun upMajor(modifier: String? = null) = change(ModifierOperation.Update(modifier)) { it.upMajor() }
 
-    fun upMinor(modifier: String? = null) = change(modifier) { it.upMinor() }
+    fun upMinor(modifier: String? = null) = change(ModifierOperation.Update(modifier)) { it.upMinor() }
 
-    fun upPatch(modifier: String? = null) = change(modifier) { it.upPatch() }
+    fun upPatch(modifier: String? = null) = change(ModifierOperation.Update(modifier)) { it.upPatch() }
 
-    fun modifier(modifier: String? = null) = change(modifier) { it }
+    fun modifier(modifier: String? = null) = change(ModifierOperation.Update(modifier)) { it }
+
+    fun nextModifierSeq() = change(ModifierOperation.NextSeq) { it }
 
     private fun change(
-        modifier: String?,
+        modifierOperation: ModifierOperation,
         incrementVersion: (SemanticVersion) -> SemanticVersion
     ): SemanticVersion {
         val currentVersion = versionRepository.find() as SemanticVersion
         val newVersion = incrementVersion(currentVersion)
             .let {
-                if (modifier?.isNotEmpty() == true) {
-                    it.appendModifier(modifier)
-                } else {
-                    it.removeModifier()
+                when (modifierOperation) {
+                    is ModifierOperation.NextSeq -> it.nextModifierSeq()
+                    is ModifierOperation.Update -> if (modifierOperation.modifier.isNullOrEmpty()) {
+                        it.removeModifier()
+                    } else {
+                        it.appendModifier(modifierOperation.modifier)
+                    }
                 }
             }
         versionRepository.save(newVersion)
         return newVersion
+    }
+
+    private sealed interface ModifierOperation {
+
+        class Update(val modifier: String?) : ModifierOperation
+
+        data object NextSeq : ModifierOperation
     }
 }

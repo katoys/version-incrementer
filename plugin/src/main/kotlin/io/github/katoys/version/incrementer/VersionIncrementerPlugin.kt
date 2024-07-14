@@ -52,6 +52,7 @@ class VersionIncrementerPlugin : Plugin<Project> {
             "up-minor" -> it.upMinor(modifier)
             "up-patch" -> it.upPatch(modifier)
             "append-modifier" -> it.modifier(modifier)
+            "next-modifier-seq" -> it.nextModifierSeq()
             "remove-modifier" -> it.modifier()
             else -> throw IllegalArgumentException("'$action' is unknown action")
         }

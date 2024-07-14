@@ -22,6 +22,7 @@
         id("io.github.katoys.version-incrementer") version "1.0.0"
     }
     ```
+- Published as a gradle plugins: https://plugins.gradle.org/plugin/io.github.katoys.version-incrementer
 
 ## Usage
 
@@ -41,7 +42,7 @@
   | up-minor      | increment minor version | result is `1.3.0`          |
   | up-patch      | increment patch version | result is `1.2.4`          |
 
-  - Increment version with modifier.
+  - Increment version and append modifier.
       ```console
       gradle versioning -Paction=$action -Pmodifier=$modifier
       ```
@@ -49,6 +50,14 @@
     ```console
     gradle versioning -Paction=append-modifier -Pmodifier=$modifier
     ```
+- Append or increment modifier sequential number. (version does not increment)
+    ```console
+    gradle versioning -Paction=next-modifier-seq
+    ```
+    - sequential number is SEQ part of `/^./(?<SEQ>\.\d+)$/`.
+    - sequential number has not been set, it will be set to 1.
+    - sequential number is already set, it will be incremented.
+    - if no modifier is set, nothing is done.
 - Remove version modifier only. (version does not increment)
     ```console
     gradle versioning -Paction=remove-modifier
@@ -62,6 +71,28 @@
     gradle printCurrentVersion -PyamlPath=your/path/to/version.yml
     gradle versioning -Paction=$action -PyamlPath=your/path/to/version.yml
     ```
+#### Example
+
+```console
+$ gradle versioning -Paction=init -Pvalue=0.0.1-SNAPSHOT -q
+0.0.1-SNAPSHOT
+$ gradle versioning -Paction=up-major -Pmodifier=SNAPSHOT -q
+1.0.0-SNAPSHOT
+$ gradle versioning -Paction=up-minor -Pmodifier=SNAPSHOT -q
+1.1.0-SNAPSHOT
+$ gradle versioning -Paction=up-patch -Pmodifier=SNAPSHOT -q
+1.1.1-SNAPSHOT
+$ gradle versioning -Paction=append-modifier -Pmodifier=alpha -q
+1.1.1-alpha
+$ gradle versioning -Paction=next-modifier-seq -q
+1.1.1-alpha.1
+$ gradle versioning -Paction=next-modifier-seq -q
+1.1.1-alpha.2
+$ gradle versioning -Paction=remove-modifier -q
+1.1.1
+$ gradle printCurrentVersion -q
+1.1.1
+```
 
 ### Call function in `build.gradle.kts`
 
@@ -69,11 +100,13 @@
 import io.github.katoys.version.incrementer.semantic.SemanticVersioning
 
 val versioning = SemanticVersioning()
-versioning.init("0.0.1") // init YAML
-versioning.upMajor() // increment major version
-versioning.upMinor() // increment minor version
-versioning.upPatch() // increment patch version
-versioning.modifier("SNAPSHOT") // append 'SNAPSHOT' as modifier
-versioning.modifier() // remove modifier
+versioning.init("0.0.1") // init YAML -> 0.0.1
+versioning.upMajor() // increment major version -> 1.0.0
+versioning.upMinor() // increment minor version -> 1.1.0
+versioning.upPatch() // increment patch version -> 1.1.1
+versioning.modifier("alpha") // append 'alpha' as modifier -> 1.1.1-alpha
+versioning.nextModifierSeq() // append modifiers sequential number to alpha -> 1.1.1-alpha.1
+versioning.nextModifierSeq() // increment modifiers sequential number -> 1.1.1-alpha.2
+versioning.modifier() // remove modifier -> 1.1.1
 versioning.current() // get current version
 ```
